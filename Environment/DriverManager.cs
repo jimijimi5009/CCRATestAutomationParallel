@@ -1,4 +1,5 @@
-﻿using CCRATestAutomation.Uttils;
+﻿using BoDi;
+using CCRATestAutomation.Uttils;
 using Gherkin.CucumberMessages.Types;
 using OpenQA.Selenium;
 using System;
@@ -12,15 +13,19 @@ namespace CCRATestAutomation.Environment
     public class DriverManager
     {
 
-        //protected static WebDriver driver;
-        protected static Scenario scenarios;
 
-        private static ThreadLocal<IWebDriver> tlDriver = new ThreadLocal<IWebDriver>();
+        private readonly IObjectContainer _objectContainer;
+        private readonly IWebDriver _driver;
 
-        public static IWebDriver GetDriver()
+        public DriverManager(IObjectContainer objectContainer, IWebDriver driver)
         {
-            return tlDriver.Value ?? (tlDriver.Value = new WebDriverFactory(tlDriver).Init());
+            _objectContainer = objectContainer;
+            _driver = driver;
         }
 
+        public IWebDriver GetDriver()
+        {
+            return _driver;
+        }
     }
 }

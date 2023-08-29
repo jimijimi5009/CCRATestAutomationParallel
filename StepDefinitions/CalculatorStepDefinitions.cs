@@ -1,3 +1,4 @@
+using BoDi;
 using CCRATestAutomation.CommonPages;
 using CCRATestAutomation.Environment;
 using CCRATestAutomation.PageObjects;
@@ -13,18 +14,21 @@ namespace CCRATestAutomation.StepDefinitions
     public  class CalculatorStepDefinitions
     {
 
-        private IWebDriver driver;
 
+        private readonly IObjectContainer _objectContainer;
         private CalculatorSPage calculatorPage;
-        public CalculatorStepDefinitions()
+        private IWebDriver _driver;
+
+        public CalculatorStepDefinitions(IObjectContainer objectContainer)
         {
-            driver = DriverManager.GetDriver();    
+            _objectContainer = objectContainer;
+            _driver = _objectContainer.Resolve<IWebDriver>();
         }
 
         [Given(@"i navigate to google")]
         public void GivenINavigateToGoogle()
         {
-            calculatorPage = new CalculatorSPage(driver);
+            calculatorPage = new CalculatorSPage(_driver);
             calculatorPage.enterData("i am here");
         }
 

@@ -11,6 +11,7 @@ using System.Threading.Tasks;
 using WebDriverManager.DriverConfigs.Impl;
 using WebDriverManager.Helpers;
 using WebDriverManager;
+using BoDi;
 
 namespace CCRATestAutomation.Environment
 {
@@ -18,14 +19,14 @@ namespace CCRATestAutomation.Environment
 
 
     {
-        private IWebDriver driver;
+        private readonly IObjectContainer _objectContainer;
 
-        private ThreadLocal<IWebDriver> tlDriver;
-
-        public WebDriverFactory(ThreadLocal<IWebDriver> tlDriver)
+        public WebDriverFactory(IObjectContainer objectContainer)
         {
-            this.tlDriver = tlDriver;
+            _objectContainer = objectContainer;
         }
+
+
 
         public IWebDriver Init()
         {
@@ -39,8 +40,10 @@ namespace CCRATestAutomation.Environment
                     OsUtill.KillAllProcesses(browser);
                 }
 
-                driver = GetLocalDriver(browser, osName);
+                IWebDriver driver = GetLocalDriver(browser, osName);
                 driver.Manage().Window.Maximize();
+
+                _objectContainer.RegisterInstanceAs(driver); // Register the driver instance with BoDi
 
                 return driver;
             }
@@ -115,7 +118,7 @@ namespace CCRATestAutomation.Environment
 
                 IWebDriver driver = new ChromeDriver(options);
 
-                tlDriver.Value = driver;
+                _objectContainer.RegisterInstanceAs(driver); // Register the driver instance with BoDi
 
                 Console.WriteLine("Starting Chrome browser");
                 return driver;
@@ -143,8 +146,14 @@ namespace CCRATestAutomation.Environment
                 options.AddArguments("--ignore-certificate-errors");
                 options.AddUserProfilePreference("profile.default_content_settings.popups", 0);
                 options.AddUserProfilePreference("download.default_directory", downloadFilepath);
-                new WebDriverManager.DriverManager().SetUpDriver(new ChromeConfig(), VersionResolveStrategy.MatchingBrowser);
-                driver = new ChromeDriver(options);
+
+                new WebDriverManager.DriverManager().SetUpDriver(new ChromeConfig());
+
+                IWebDriver driver = new ChromeDriver(options);
+
+                _objectContainer.RegisterInstanceAs(driver); // Register the driver instance with BoDi
+
+                Console.WriteLine("Starting Chrome browser");
                 return driver;
             }
             catch (Exception e)
@@ -159,8 +168,13 @@ namespace CCRATestAutomation.Environment
             {
                 FirefoxOptions opts = new FirefoxOptions();
                 opts.AddArguments("-private");
+               
                 new WebDriverManager.DriverManager().SetUpDriver(new FirefoxConfig(), version: "latest");
-                driver = new FirefoxDriver(opts);
+
+                IWebDriver driver = new FirefoxDriver(opts);
+
+                _objectContainer.RegisterInstanceAs(driver); // Register the driver instance with BoDi
+
                 Console.WriteLine("Starting Firefox browser");
                 return driver;
             }
@@ -177,9 +191,14 @@ namespace CCRATestAutomation.Environment
                 EdgeOptions edgeOptions = new EdgeOptions();
                 edgeOptions.AddArgument("-inprivate");
                 new WebDriverManager.DriverManager().SetUpDriver(new EdgeConfig(), version: "latest");
-                driver = new EdgeDriver(edgeOptions);
+
+                IWebDriver driver = new EdgeDriver(edgeOptions);
+
+                _objectContainer.RegisterInstanceAs(driver); // Register the driver instance with BoDi
+
                 Console.WriteLine("Starting Edge browser");
                 return driver;
+
             }
             catch (Exception e)
             {

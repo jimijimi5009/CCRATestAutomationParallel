@@ -1,4 +1,5 @@
-﻿using CCRATestAutomation.CommonPages;
+﻿using BoDi;
+using CCRATestAutomation.CommonPages;
 using CCRATestAutomation.Environment;
 using CCRATestAutomation.Uttils;
 using OpenQA.Selenium;
@@ -9,15 +10,20 @@ namespace CCRATestAutomation.Hooks
 {
 
     [Binding]
-    public class Hooks 
+    public class Hooks
     {
 
-        private IWebDriver driver;
+        private readonly IObjectContainer _objectContainer;
+        private readonly IWebDriver _driver;
 
-        public Hooks(IWebDriver driver)
+        public Hooks(IObjectContainer objectContainer)
         {
-            this.driver = driver;
+            _objectContainer = objectContainer;
+            _driver = new WebDriverFactory(objectContainer).Init(); // Initialize WebDriver
+            _objectContainer.RegisterInstanceAs(_driver, "Driver");
+         
         }
+
 
         [BeforeScenario]
         public void BeforeScenario()
@@ -29,7 +35,7 @@ namespace CCRATestAutomation.Hooks
         public void AfterScenario()
         {
             // Close the Driver
-            driver.Quit();
+            _driver.Quit();
         }
 
         private void StartApplication()
@@ -37,9 +43,10 @@ namespace CCRATestAutomation.Hooks
             //String executionEnvironment = new EnvironmentFactory().getBrowserExecutionEnvironment();
             //String appEnv = new EnvironmentFactory().getApplicationEnv(); ///QA, Stage;
 
+   
             string url = AppConfigReader.GetAppSetting("url");
 
-            driver.Navigate().GoToUrl(url);
+            _driver.Navigate().GoToUrl(url);
         }
     }
 }

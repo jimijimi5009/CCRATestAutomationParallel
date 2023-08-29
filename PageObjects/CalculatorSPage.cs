@@ -7,20 +7,20 @@ namespace CCRATestAutomation.PageObjects
     public class CalculatorSPage
     {
 
-        private IWebDriver driver;
-        private SeleniumElements seleniumElements;
+        private readonly IWebDriver _driver;
+        private readonly SeleniumElements _seleniumElements;
 
-        private IWebElement textBox => driver.FindElement(By.XPath("//*[@type='search']"));
+        private IWebElement TextBox => _driver.FindElement(By.XPath("//*[@type='search']"));
 
         public CalculatorSPage(IWebDriver driver)
         {
-            this.driver = driver;
-            this.seleniumElements = new SeleniumElements(driver);
+            _driver = driver;
+            _seleniumElements = new SeleniumElements(driver);
         }
 
         public void enterData(string data)
         {
-            seleniumElements.WaitAndSendKeys(textBox, data);
+            _seleniumElements.WaitAndSendKeys(TextBox, data);
 
             Console.WriteLine(data);
            
