@@ -9,7 +9,8 @@ using OpenQA.Selenium;
 namespace CCRATestAutomation.StepDefinitions
 {
     [TestFixture]
-    [Parallelizable(ParallelScope.All)]
+    //[Parallelizable(ParallelScope.All)]
+    [assembly: NUnit.Framework.TestFixture(NUnit.Framework.TestFixtureType.Parallel)]
     [Binding]
     public  class CalculatorStepDefinitions
     {
@@ -30,6 +31,7 @@ namespace CCRATestAutomation.StepDefinitions
         {
             calculatorPage = new CalculatorSPage(_driver);
             calculatorPage.enterData("i am here");
+            Thread.Sleep(5000);
         }
 
 

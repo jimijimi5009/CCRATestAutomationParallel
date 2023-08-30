@@ -2,6 +2,7 @@
 using CCRATestAutomation.CommonPages;
 using CCRATestAutomation.Environment;
 using CCRATestAutomation.Uttils;
+using NUnit.Framework;
 using OpenQA.Selenium;
 using SpecFlow;
 using TechTalk.SpecFlow;
@@ -9,25 +10,27 @@ using TechTalk.SpecFlow;
 namespace CCRATestAutomation.Hooks
 {
 
+    [TestFixture]
+    [Parallelizable(ParallelScope.Self)]
     [Binding]
     public class Hooks
     {
 
         private readonly IObjectContainer _objectContainer;
-        private readonly IWebDriver _driver;
+        private IWebDriver _driver;
 
         public Hooks(IObjectContainer objectContainer)
         {
             _objectContainer = objectContainer;
-            _driver = new WebDriverFactory(objectContainer).Init(); // Initialize WebDriver
-            _objectContainer.RegisterInstanceAs(_driver, "Driver");
-         
+
         }
 
 
         [BeforeScenario]
         public void BeforeScenario()
         {
+            _driver = new WebDriverFactory(_objectContainer).Init(); // Initialize WebDriver
+            _objectContainer.RegisterInstanceAs(_driver);
             StartApplication();
         }
 
