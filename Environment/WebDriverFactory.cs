@@ -169,7 +169,9 @@ namespace CCRATestAutomation.Environment
                 FirefoxOptions opts = new FirefoxOptions();
                 opts.AddArguments("-private");
                
-                new WebDriverManager.DriverManager().SetUpDriver(new FirefoxConfig(), version: "latest");
+                //new WebDriverManager.DriverManager().SetUpDriver(new FirefoxConfig(), version: "latest");
+                new WebDriverManager.DriverManager().SetUpDriver(new FirefoxConfig(), VersionResolveStrategy.Latest);
+
 
                 IWebDriver driver = new FirefoxDriver(opts);
 

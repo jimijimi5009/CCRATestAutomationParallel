@@ -31,7 +31,7 @@ namespace CCRATestAutomation.PageObjects
         internal void clickSearch()
 
         {
-           _seleniumElements.HighlightElementBackground(clickSearchBtn, "pass");
+           //_seleniumElements.HighlightElementBackground(clickSearchBtn, "pass");
             _seleniumElements.WaitAndClick(clickSearchBtn);
             Thread.Sleep(4000);
         }
