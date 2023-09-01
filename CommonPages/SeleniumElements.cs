@@ -304,7 +304,7 @@ namespace CCRATestAutomation.CommonPages
                     js.ExecuteScript("arguments[0].style.backgroundColor = '" + "red" + "'", element);
                 }
 
-                Thread.Sleep(2000);
+                //Thread.Sleep(2000);
             }
         }
 

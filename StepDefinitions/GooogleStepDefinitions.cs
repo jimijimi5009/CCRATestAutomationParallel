@@ -9,30 +9,43 @@ using OpenQA.Selenium;
 namespace CCRATestAutomation.StepDefinitions
 {
     [TestFixture]
-    //[Parallelizable(ParallelScope.All)]
-    [assembly: NUnit.Framework.TestFixture(NUnit.Framework.TestFixtureType.Parallel)]
+    [Parallelizable(ParallelScope.All)]
     [Binding]
-    public  class CalculatorStepDefinitions
+    public class GooogleStepDefinitions
     {
 
 
         private readonly IObjectContainer _objectContainer;
-        private CalculatorSPage calculatorPage;
+        private GooglePage calculatorPage;
         private IWebDriver _driver;
 
-        public CalculatorStepDefinitions(IObjectContainer objectContainer)
+        public GooogleStepDefinitions(IObjectContainer objectContainer)
         {
             _objectContainer = objectContainer;
             _driver = _objectContainer.Resolve<IWebDriver>();
+
         }
 
         [Given(@"i navigate to google")]
         public void GivenINavigateToGoogle()
         {
-            calculatorPage = new CalculatorSPage(_driver);
-            calculatorPage.enterData("i am here");
+
+        }
+
+        [Then(@"i enter  ""([^""]*)"" Data on Search bar")]
+        public void ThenIEnterDataOnSearchBar(string p0)
+        {
+            calculatorPage = new GooglePage(_driver);    
+            calculatorPage.enterData(p0);
+        }
+
+        [Then(@"i Click Search")]
+        public void ThenIClickSearch()
+        {
+            calculatorPage.clickSearch();
             Thread.Sleep(5000);
         }
+
 
 
     }
